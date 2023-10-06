@@ -16,6 +16,7 @@ class funcion:
         return f"""Precio de equilibrio = {precio_equilibrio[0]}\nCantidad de equilibrio = {cantidad_equilibrio}"""
     
     def exc(self):
+        os.system("cls")
         p = symbols("p")
         MANTENER = 1
         REEMPLAZAR = 2
@@ -39,6 +40,7 @@ class funcion:
             return f"""Precio de equilibrio: {precio_equilibrio[0]}\nExceso de demanda: {Xd2 - Xo2}\nExceso de oferta: {Xo3 - Xd3}"""
         
         elif opc == REEMPLAZAR:
+            os.system("cls")
             #Reemplazando el precio de demanda
             x = int(input("Nuevo precio de demanda: "))
             y = int(input("Nuevo precio de oferta: "))
@@ -47,6 +49,8 @@ class funcion:
 
             Xo5 = self.off.subs({p: y})
             Xd5 = self.dda.subs({p: y})
+
+            os.system("cls")
 
             return f"""Exceso de demanda: {Xd4 - Xo4}\nExceso de oferta: {Xo5 - Xd5}"""
     
@@ -86,12 +90,16 @@ class funcion:
             Exceso_Demanda = self.dda - self.off
             precioimpo = solve(Eq(x, Exceso_Demanda))
 
+            os.system("cls")
+
             return f"""El precio de exportacion a una cantidad de {y} unidades es {precioexpo[0]}\nEl precio de importacion a una cantidad de {x} unidades es {precioimpo[0]}"""
 
 
 EQ_MERCADO = 1
 EXC_DDA_OFF = 2
 PRECIO_EXPO_IMPO = 3
+INTRODUCIR_NUEVA_FUNCION = 4
+SALIR = 5
 
 def menu():
     os.system("cls")
@@ -99,10 +107,11 @@ def menu():
         {EQ_MERCADO}) Equilibrio de Mercado.
         {EXC_DDA_OFF}) Exceso de Demanda y oferta. 
         {PRECIO_EXPO_IMPO}) Precio de Exportacion e Importacion.
+        {INTRODUCIR_NUEVA_FUNCION}) Introducir nuevas funciones.
+        {SALIR}) Salir.
         """)
 
 def main():
-    
     #Solicitando las funciones
     print("""Introduzca las funciones de Demanda y Oferta en terminos del precio. Por ejemplo:\n
                         Xd = a + b*p
@@ -115,17 +124,38 @@ def main():
     oferta = sympify(oferta)
 
     prueba = funcion(demanda, oferta)
+    continuar = True
+    while continuar:
+        os.system("cls")
+        menu()
+        opc = int(input("Selecciona una opcion: "))
+        os.system("cls")
+        if opc == EQ_MERCADO:
+            print(prueba.eqq())
+        elif opc == EXC_DDA_OFF:
+            print(prueba.exc())
+        elif opc == PRECIO_EXPO_IMPO:
+            print(prueba.precio_expo())
+        elif opc == INTRODUCIR_NUEVA_FUNCION:
+            #Solicitando las funciones
+            print("""Introduzca las funciones de Demanda y Oferta en terminos del precio. Por ejemplo:\n
+                        Xd = a + b*p
+                        Xo = c - p """)
+            demanda = input("Demanda: ")
+            oferta = input("Oferta: ")
 
-    
-    menu()
-    opc = int(input("Selecciona una opcion: "))
-    os.system("cls")
-    if opc == EQ_MERCADO:
-        print(prueba.eqq())
-    elif opc == EXC_DDA_OFF:
-        print(prueba.exc())
-    elif opc == PRECIO_EXPO_IMPO:
-        print(prueba.precio_expo())
+            #Convirtiendo el str a funcion simbolica
+            demanda = sympify(demanda)
+            oferta = sympify(oferta)
+
+            prueba = funcion(demanda, oferta)
+
+        elif opc == SALIR:
+            continuar = False
+        else:
+            print("opcion no valida")
+        input("Presiona enter para continuar...")
+
         
 
 if __name__ == "__main__":
